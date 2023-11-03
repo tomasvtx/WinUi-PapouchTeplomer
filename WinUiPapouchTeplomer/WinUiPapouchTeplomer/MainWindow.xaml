@@ -1,0 +1,65 @@
+<Window
+    x:Class="WinUiPapouchTeplomer.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:WinUiPapouchTeplomer"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:chart="using:Syncfusion.UI.Xaml.Charts"
+    mc:Ignorable="d" Title="PAPOUCH Teploměr">
+
+    <Grid Name="Grid" Background="DarkSlateBlue">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="2*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="160"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+
+        <Viewbox Margin="10">
+            <StackPanel>
+                <HyperlinkButton Width="310" NavigateUri="https://papouch.com/mereni/teplomery-a-vlhkomery/">
+                    <Image Source="/kontakty-papouch-store.png"/>
+                </HyperlinkButton>
+                <ComboBox HorizontalContentAlignment="Center" Width="290" FontSize="50" SelectionChanged="ComboBoxSelectionChanged" ItemsSource="{Binding Ports}" SelectedValue="{Binding Port, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10"/>
+                <TextBlock Width="120" FontSize="18" TextWrapping="WrapWholeWords" Margin="10" HorizontalTextAlignment="Center" Text="{Binding Chyba}"/>
+
+                <ComboBox SelectionChanged="ComboBoxSelectionChanged1" HorizontalContentAlignment="Center" Width="290" FontSize="50" ItemsSource="{Binding Method}" SelectedValue="{Binding SelectedMethod, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10"/>
+            </StackPanel>
+        </Viewbox>
+
+        <Viewbox Grid.Column="1">
+            <TextBlock TextWrapping="WrapWholeWords" TextAlignment="Center" HorizontalTextAlignment="Center" HorizontalAlignment="Center" Foreground="AliceBlue">
+                <TextBlock.Text>
+                    <Binding Path="Teplota" Converter="{StaticResource DoubleToTextConverter}" />
+                </TextBlock.Text>
+            </TextBlock>
+        </Viewbox>
+
+        <chart:SfCartesianChart Grid.ColumnSpan="2" Background="Black" Grid.Row="1" Header="PAPOUCH Teploměr - záznam">
+            <chart:SfCartesianChart.XAxes>
+                <chart:DateTimeAxis Header="Čas"/>
+            </chart:SfCartesianChart.XAxes>
+            <chart:SfCartesianChart.YAxes>
+                <chart:NumericalAxis Header="Teplota"/>
+            </chart:SfCartesianChart.YAxes>
+
+            <chart:SfCartesianChart.Series>
+                <chart:FastLineBitmapSeries Foreground="LightYellow" StrokeWidth="5" Visibility="{Binding SelectedMethod, Converter={StaticResource CVisible}}" Name="Graf" Label="Teploty"
+                      ShowDataLabels="False"
+                      ItemsSource="{Binding Teploty}"
+                      XBindingPath="DateTime" 
+                      YBindingPath="Teplota">
+                </chart:FastLineBitmapSeries>
+
+                <chart:FastLineBitmapSeries Foreground="LightYellow" StrokeWidth="5" Visibility="{Binding SelectedMethod, Converter={StaticResource FVisible}}" Label="Teploty"
+                      ShowDataLabels="False"
+                      ItemsSource="{Binding Teploty}"
+                      XBindingPath="DateTime" 
+                      YBindingPath="TeplotaF">
+                </chart:FastLineBitmapSeries>
+            </chart:SfCartesianChart.Series>
+        </chart:SfCartesianChart>
+    </Grid>
+</Window>
